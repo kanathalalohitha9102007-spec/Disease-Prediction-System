@@ -1,0 +1,16 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^cd \"c:\\\\Users\\\\Lohit\\\\OneDrive\\\\Desktop\\\\pyhton project\"; python -m pip install --upgrade pip; python -m pip install --upgrade --force-reinstall numpy pandas matplotlib$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^cd \"c:\\\\Users\\\\Lohit\\\\OneDrive\\\\Desktop\\\\pyhton project\"; python -m pip install --upgrade matplotlib$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^cd \"c:\\\\Users\\\\Lohit\\\\OneDrive\\\\Desktop\\\\pyhton project\"; python -m pip install --upgrade streamlit; python -m streamlit run hello\\.py$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}
