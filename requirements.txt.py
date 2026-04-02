@@ -1,4 +1,5 @@
-pandas
+# requirements.txt.py
 scikit-learn
 streamlit
-pickle-mixin
+pandas
+numpy
