@@ -3,6 +3,7 @@ import pickle
 import numpy as np
 import pandas as pd
 from fpdf import FPDF
+from io import BytesIO
 
 # -------------------------------
 # PAGE CONFIG + UI STYLE
@@ -23,10 +24,17 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # -------------------------------
-# LOAD MODEL FILES
+# LOAD MODEL FILES (SAFE METHOD)
 # -------------------------------
-model = pickle.load(open("model.pkl", "rb"))
-symptoms_list = pickle.load(open("symptoms.pkl", "rb"))
+@st.cache_resource
+def load_files():
+    with open("model.pkl", "rb") as f:
+        model = pickle.load(f)
+    with open("symptoms.pkl", "rb") as f:
+        symptoms = pickle.load(f)
+    return model, symptoms
+
+model, symptoms_list = load_files()
 
 # -------------------------------
 # TITLE + SIDEBAR
@@ -100,7 +108,7 @@ if st.button("Predict"):
         st.write(f"👨‍⚕️ Recommended Doctor: **{doctor}**")
 
         # -------------------------------
-        # PDF DOWNLOAD
+        # PDF DOWNLOAD (CLOUD SAFE)
         # -------------------------------
         pdf = FPDF()
         pdf.add_page()
@@ -111,15 +119,16 @@ if st.button("Predict"):
         pdf.cell(200, 10, txt=f"Confidence: {np.max(prob)*100:.2f}%", ln=True)
         pdf.cell(200, 10, txt=f"Recommended Doctor: {doctor}", ln=True)
 
-        pdf.output("report.pdf")
+        pdf_buffer = BytesIO()
+        pdf.output(pdf_buffer)
+        pdf_buffer.seek(0)
 
-        with open("report.pdf", "rb") as file:
-            st.download_button(
-                label="📄 Download Report",
-                data=file,
-                file_name="disease_report.pdf",
-                mime="application/pdf"
-            )
+        st.download_button(
+            label="📄 Download Report",
+            data=pdf_buffer,
+            file_name="disease_report.pdf",
+            mime="application/pdf"
+        )
 
 # -------------------------------
 # FOOTER
